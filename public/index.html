@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>HookLedger · Event operations</title>
+  <link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="/"><span class="logo">H</span> HookLedger</a>
+    <div class="workspace"><span class="workspace-icon">Y</span><div>Development workspace<small>Single-node · SQLite</small></div></div>
+    <span class="nav-label">OPERATIONS</span>
+    <a class="nav active" href="#events"><span>▤</span> Event inbox <span class="nav-dot"></span></a>
+    <div class="sidebar-note"><span class="signal"></span> Durable by design<p>Acknowledge after commit.<br>Recover after failure.</p></div>
+    <a class="source" href="https://github.com/thinandyavin-tech/hookledger" target="_blank" rel="noopener">Source & architecture ↗</a>
+  </aside>
+  <main>
+    <header><div class="breadcrumb">Workspace <span>/</span> Event operations</div><span class="environment">LOCAL DEVELOPMENT</span></header>
+    <section class="heading"><div><div class="eyebrow">WEBHOOK CONTROL PLANE</div><h1>Every event. Accounted for.</h1><p>Inspect deliveries, trace retries, and recover failed work.</p></div><button id="refresh" class="secondary" disabled>↻ Refresh</button></section>
+    <form id="unlock" class="auth"><div><strong>Connect to your inbox</strong><p>Use ADMIN_TOKEN from your local .env file. It stays in this tab’s memory.</p></div><div class="auth-input"><label class="sr-only" for="token">Admin token</label><input id="token" type="password" placeholder="Paste admin token" required autocomplete="off"><button type="submit">Connect →</button></div></form>
+    <div id="notice" role="status" aria-live="polite"></div>
+    <section class="stats" aria-label="Event counts">
+      <article><div>Total accepted <span>↳</span></div><strong id="total">—</strong><small>Persisted unique events</small></article>
+      <article><div>Completed <span class="green">✓</span></div><strong id="succeeded">—</strong><small>Handler returned successfully</small></article>
+      <article><div>In progress <span class="amber">◷</span></div><strong id="pending">—</strong><small>Queued + active leases</small></article>
+      <article><div>Needs attention <span class="red">!</span></div><strong id="dead">—</strong><small>Attempt limit reached</small></article>
+    </section>
+    <section id="events" class="panel">
+      <div class="panel-heading"><div><h2>Event inbox <span id="count" class="count">0</span></h2><p>Latest 100 events · select a row for its audit trail</p></div><label class="filter"><span class="sr-only">Filter by status</span><select id="filter"><option value="all">All statuses</option><option value="succeeded">Succeeded</option><option value="queued">Queued</option><option value="processing">Processing</option><option value="dead">Dead letter</option></select></label></div>
+      <div class="table-scroll"><table><thead><tr><th>Event / identifier</th><th>Status</th><th>Attempts</th><th>Received</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+      <div id="empty" class="empty"><span>↳</span><h3>Your inbox is ready.</h3><p>Connect, then run <code>npm run demo</code> in another terminal<br>to watch signed events move through the queue.</p></div>
+      <div class="panel-footer"><span><i class="signal"></i> <span id="sync">Awaiting connection</span></span><span>At-least-once processing</span></div>
+    </section>
+    <section id="detail" class="panel detail" hidden><div class="panel-heading"><div><h2>Event history</h2><p id="selected"></p></div><button id="close-detail" class="secondary">Close</button></div><ol id="history"></ol></section>
+    <section class="principles"><div><span>01 / VERIFY</span><h3>Trust the signature.</h3><p>HMAC binds the ID, timestamp, and body. A five-minute window limits replay.</p></div><div><span>02 / PERSIST</span><h3>Commit before response.</h3><p>SQLite transactions keep the inbox and its history consistent across restarts.</p></div><div><span>03 / RECOVER</span><h3>Make failures visible.</h3><p>Bounded retries and fenced leases turn abandoned work into recoverable events.</p></div></section>
+    <footer>HOOKLEDGER <span>Built by Yavin Songkham · Demo handler · v0.1</span></footer>
+  </main>
+</body></html>

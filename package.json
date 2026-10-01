@@ -1,0 +1,22 @@
+{
+  "name": "hookledger",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A durable webhook inbox with fenced worker leases and an operations dashboard",
+  "type": "module",
+  "engines": {
+    "node": ">=24.12.0 <25"
+  },
+  "scripts": {
+    "setup": "node scripts/setup.ts",
+    "start": "node --env-file-if-exists=.env src/main.ts",
+    "demo": "node --env-file-if-exists=.env scripts/demo.ts",
+    "check": "tsc --noEmit",
+    "test": "node --test test/*.test.ts"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.19.0",
+    "typescript": "~5.9.3"
+  }
+}
